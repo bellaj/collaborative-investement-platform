@@ -1,0 +1,235 @@
+<html>
+	<head>
+  		<script src="web3js/web3.js"></script>
+
+	</head>
+
+
+<script type="text/javascript">
+ 	 
+	 var contract_c=0;
+	 var proj_address=0x0;
+	 	var auctionInstance=0x0;
+		var user=0x0;
+		
+			window.addEventListener('load', function() {
+
+   if (typeof web3 !== 'undefined') {
+    // Use Mist/MetaMask's provider
+    window.web3 = new Web3(web3.currentProvider);
+	console.log("1");
+	
+  } else {
+    console.log('No web3? You should consider trying MetaMask!')
+    // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+    window.web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/esamuIL4MaKepy64zcLj"));
+		console.log("2");
+
+  }
+
+  // Now you can start your app & access web3 freely:
+auctionContract =web3.eth.contract([{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"ad","type":"address"},{"name":"s","type":"uint256"}],"name":"deliver_token","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"project_","type":"address"},{"name":"amount","type":"uint256"}],"name":"invest_in_project","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"},{"name":"_extraData","type":"bytes"}],"name":"approveAndCall","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"admin","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"},{"payable":false,"type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_owner","type":"address"},{"indexed":true,"name":"_spender","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Approval","type":"event"}]
+);
+ 	
+ contract_c="0x62012e09bc441f0c07bab6a73b2e260e62e5000b";//Token delivery
+  proj_address="0x1feaa976b7de2af19095c369c96a44e9c90211cc"; //project contract adress
+	  auctionInstance = auctionContract.at(contract_c);
+
+
+
+get_address();
+
+})		
+
+  function get_address(){
+   web3.eth.getAccounts(function(error, result){
+    if(!error)
+{
+user=result;  }
+    else
+user=0x1;
+});
+ 
+ }
+
+
+function load2(){
+ 
+get_address();
+	var ContractInstance2 = auctionContract.at(proj_address);
+
+ 		
+			ContractInstance2.balanceOf.call(user[0], function(err, result){
+					if(!err)
+						document.getElementById("balance_user").innerHTML ='you have '+  result+' Project Token';
+					else
+						document.getElementById("balance_user").innerHTML = 'Transaction error ' + err;
+				});
+ 
+
+}
+
+function load( ){
+get_address();
+
+		document.getElementById("address_c").innerHTML=contract_c;
+		document.getElementById("address_u").innerHTML=user[0];
+		
+			auctionInstance.balanceOf.call(user[0], function(err, result){
+					if(!err)
+						document.getElementById("balance_user").innerHTML ='you have '+  result+' Daaret Token';
+					else
+						document.getElementById("balance_user").innerHTML = 'Transaction error ' + err;
+				});
+		//document.getElementById("balance_user").innerHTML=balance;
+
+
+}
+ 
+
+			function invest() {
+			var sender_address= user[0];
+			var invest_amount=document.getElementById("investAmount").value;
+			//	var value = web3.toWei(document.getElementById("investAmount").value, 'ether');
+				var transactionObject = {
+					 from: sender_address,
+					 //value: "test",
+					 gas: 3000000
+				   };
+
+				auctionInstance.invest_in_project(proj_address,invest_amount,transactionObject, function(err, result){
+					if(!err)
+						document.getElementById("results").innerHTML = 'Transaction en cours: ' + result;
+					else
+						document.getElementById("results").innerHTML = ' error: ' + err;
+				});
+
+			 
+			};
+			
+ 
+//}
+	 
+		</script>
+		
+		
+		<style>
+* {
+    box-sizing: border-box;
+}
+.header, .footer {
+margin-top:30px;
+    background-color: grey;
+    color: white;
+    padding: 5px;
+}
+.column {
+    float: left;
+    padding: 15px;
+}
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+.menu {
+    width: 35%;
+}
+.content {
+    width: 65%;
+}
+.menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.menu li {
+    padding: 8px;
+    margin-bottom: 8px;
+    background-color: #33b5e5;
+    color: #ffffff;
+}
+.menu li:hover {
+    background-color: #0099cc;
+}
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.navbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+</style>
+		
+		
+		<body  >
+<div class="navbar">
+  <a href="index.html">Project list</a>
+  <a href="operations.html">Operations</a>
+  <a href="invest.html">invest</a>
+  <a href="auction.html">Auction</a>
+</div>
+<div class="header">
+  <h1><h3>Project X (Investement phase : Token sell)</h3> </h1>
+</div>
+
+<div class="clearfix">
+  <div class="column menu">
+    <ul> Project Details
+      <li>Total investement Targeted : 5000 $ (10 000 Daaret Token)</li>
+      <li id="al1">Risk level : B</li>
+      <li id="al2">Investement History: None</li>
+      <li id="al3">Documents</li>
+    </ul>
+	
+	  <div style="background-color: #f6f6f7;  padding: 20px; border:1px;border-style: solid; border-color: gray;">		
+  	<input type="number" id="investAmount" placeholder="investement Amount (e.g. 1 Token)" />
+		<button id="bid" onClick="invest();">Invest</button>
+		Your Balance is : <div id="balance_user"></div>
+ 		<br />
+ 		<button id="bid" onClick="load();">check D token</button>
+ 		<button id="bid2" onClick="load2();">check P token</button>
+ </div>
+	
+	
+  </div>
+
+  <div class="column content">
+    <h1>Project X (Sell phase : Auction)</h1>
+    <img src="./pics/a.jpg">
+    <p>Chania is the capital of the Chania region on the island of Crete. The city can be divided in two parts, the old town and the modern city.</p>
+    <p>You will learn more about web layout and responsive web pages in a later chapter.</p>
+  </div>
+  
+  </div>
+
+
+
+ <div id="results"></div>
+
+<div class="footer">
+  <p><div id="results"></div>
+  
+     		<div><h2>Investement dApp</h2> Contract Address : <div id="address_c"></div>  User's Address :<div id="address_u"></div></div>
+
+</p>
+</div>
+
+</body>
+</html>
+
+		
+</body>
+</html>
+
+		 

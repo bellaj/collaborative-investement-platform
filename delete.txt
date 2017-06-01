@@ -1,0 +1,23 @@
+
+
+Salam Si ayachi,
+
+
+Rmdan mubarak, et j'espere que tu est en bonne forme,
+
+je retourne vers vous pour vous presenter un premier prototype de la platforme basé sur la blockchain ethereum.
+
+Dans ce prototype, l'utilisateur en entrée il doit acquerir un Token ( que j'ai nomé dareet token ou D token) apres avoir déposer de l'argent cette operation est permise à l'administrateur. Donc l'administrateur apres avoir verifier le depot il envoie des token à l'utilisateur.=> page operations
+
+une fois il acquis le token l'utilisateur a le choix entre investir dans des projets proposés ou 'acheter'/acquerir des offres presentés.=> page prinicipal
+
+si il choisit de faire un investement il entre sur le projet qu'il desire et il envoie le montant qu'il veux investir avec (en token)
+si il choisit d'acquerir une offre il participe dans une auction (qui est gérée par l'administrateur).
+en considerant la valeur finale de l'auction la valeur des tokens investit change et les investisseurs peuvent soit garder leurs token, les vendre ou les transfere.
+
+tout le process est actuelement en live via la blockchain ethereum (Testnet).
+
+
+Actuellement je suis en phase de test et de correction. Vous pouvez tester le prototype en installant le plugin Metamask sur chrome.
+https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en
+une fois installé vous devez se procurer 

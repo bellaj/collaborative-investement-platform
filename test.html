@@ -1,0 +1,73 @@
+ 
+  		<script src="./web3js/web3.js"></script>
+
+<script>
+ 
+
+			window.addEventListener('load', function() {
+
+   if (typeof web3 !== 'undefined') {
+    // Use Mist/MetaMask's provider
+    window.web3 = new Web3(web3.currentProvider);
+	console.log("Metamask used"); 
+
+  } else {
+    console.log('No web3? You should consider trying MetaMask!')
+    // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+    window.web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/esamuIL4MaKepy64zcLj"));
+		console.log("Infura used ");
+
+  }
+  
+//let web3 = window.web;
+
+ 
+getFive();delay();
+f();
+ 
+})		
+
+
+
+function f(){
+ web3.eth.getAccounts(function(error, result){
+    if(!error)
+ console.log('addressy'+result);
+    else
+ console.log('ac0_23333'+error);
+})
+
+}
+   function getFive(){
+        var data;
+        setTimeout(function(){ // set a timer for one second in the future
+           data = 5; // after a second, do this
+        }, 1000);
+        return data;
+    }
+
+ function delay() {
+  // `delay` returns a promise
+  return new Promise(function(resolve, reject) {
+    // Only `delay` is able to resolve or reject the promise
+    setTimeout(function() {
+      resolve(42); // After 3 seconds, resolve the promise with value 42
+    }, 3000);
+  });
+}
+/* var contractA = web3.eth.contract(abiDefinition).at("0x9da874fc3562ed2adfac923a59948674939e5e8f");
+ contractA.my_method(function(error, result){
+     if(!error)
+         console.log(result)
+     else
+         console.error(error);
+ });*/
+
+</script>
+	
+
+ 
+ 
+ 	</script>
+	
+	<h2>running app</h2>

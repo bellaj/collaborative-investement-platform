@@ -1,0 +1,336 @@
+<html>
+	<head>
+  		<script src="web3js/web3.js"></script>
+
+	</head>
+
+
+<script type="text/javascript">
+ 	 var auctionContract=0x0;
+	 	var auctionInstance=0x0;
+	 	var user=0x0;
+				window.addEventListener('load', function() {
+
+   if (typeof web3 !== 'undefined') {
+    // Use Mist/MetaMask's provider
+    window.web3 = new Web3(web3.currentProvider);
+	console.log("1");
+  } else {
+    console.log('No web3? You should consider trying MetaMask!')
+    // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+    window.web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/esamuIL4MaKepy64zcLj"));
+		console.log("2");
+
+  }
+
+  // Now you can start your app & access web3 freely:
+
+ auctionContract = web3.eth.contract([{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[],"name":"stop_auction","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"end_time","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_biddingTime","type":"uint256"}],"name":"start_auction","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"bids","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"start_time","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"highestBidder","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"auction_started","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"investor","type":"address"},{"name":"amount","type":"uint256"}],"name":"invest","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"highestBid","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"bidder","type":"address"},{"name":"value_","type":"uint256"}],"name":"placeBid","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"admin","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"inputs":[{"name":"tokens_quantity","type":"uint256"}],"payable":false,"type":"constructor"},{"payable":false,"type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"bidder","type":"address"},{"indexed":true,"name":"value","type":"uint256"}],"name":"bid_placed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_owner","type":"address"},{"indexed":true,"name":"_spender","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Approval","type":"event"}]
+
+);
+	  auctionInstance = auctionContract.at("0x1feaa976b7de2af19095c369c96a44e9c90211cc");
+	  user_();
+lookup();
+ 
+})		
+		  		 
+
+  function user_(){
+ web3.eth.getAccounts(function(error, result){
+    if(!error){
+	user=result;
+ }
+    else
+user=0x1;
+})
+
+}
+
+
+ 
+function start_auction(){
+
+
+var transactionObject = {
+					 from: user[0],
+					 //value: "test",
+					 gas: 3000000
+				   };
+
+			auctionInstance.start_auction(1000,transactionObject, function(err, result){
+					if(!err)
+						document.getElementById("results").innerHTML = ' auction started :' + result;
+					else
+						document.getElementById("results").innerHTML = ' auction error: ' + err;
+				});
+
+};
+
+			function bid() {
+			var sender_address= user[0];
+			var bid_amount=document.getElementById("bidAmount").value;
+				var value = web3.toWei(document.getElementById("bidAmount").value, 'ether');
+				var transactionObject = {
+					 from: sender_address,
+					 //value: "test",
+					 gas: 3000000
+				   };
+
+				auctionInstance.placeBid(sender_address,bid_amount,transactionObject, function(err, result){
+					if(!err)
+						document.getElementById("results").innerHTML = 'Transaction en cours:  ' + result;
+					else
+						document.getElementById("results").innerHTML = ' error: ' + err;
+				});
+
+			 
+			};
+			
+function lookup(){
+	// var value = web3.toWei(document.getElementById("bidAmount").value, 'ether');
+	var admin_;
+	var state = false;
+	var Highest_bid=0;
+	var Highest_bider=0;
+	var end_time=0;
+	var auction_state=false;
+	
+	/////////////////////////////////////////////
+	auctionInstance.admin(function(error, result){
+    if(!error)
+        admin_=result;
+    else
+        console.error(error);
+})
+	 ////////////////////////////////////////
+
+	if(admin_!=user[0])
+	{
+	document.getElementById("start").disabled = true;document.getElementById("stop").disabled = true; 
+	}
+		document.getElementById("address_").innerHTML ='your address is '+user[0];
+
+				var transactionObject = {
+					 from: user[0],
+					 //value: "test",
+					 gas: 3000000
+				   };
+				   
+//var state="auction Off";
+
+auctionInstance.highestBidder(function(error, result){
+    if(!error)
+        {Highest_bider=result;	document.getElementById("al2").innerHTML ='<br>Higher bidder:'+Highest_bider;}
+
+    else
+        console.error(error);
+});
+
+auctionInstance.highestBid(function(error, result){
+    if(!error)
+        {Highest_bid=result;
+			document.getElementById("al3").innerHTML ='<br> Highest Bid :'+Highest_bid;   }
+
+    else
+        console.error(error);
+});
+
+auctionInstance.auction_started(function(error, result){
+    if(!error)
+       { auction_state=result;	document.getElementById("al1").innerHTML = '<br /><br /> State: '+ auction_state;}
+    else
+        console.error(error);
+});
+	var time_start=0;
+	auctionInstance.start_time(function(error, result){
+    if(!error)
+        time_start=result;
+    else
+        console.error(error);
+});
+				   
+ <!-- if(auction_state==true) -->
+    <!-- state="Auction started"; -->
+
+				 
+auctionInstance.end_time(function(error, result){
+    if(!error)
+        {end_time=result; 
+			document.getElementById("al4").innerHTML ='<br> End Auction Time :'+new Date(end_time*1000);}
+    else
+        console.error(error);
+});
+			
+					
+					
+					
+	document.getElementById("al1").innerHTML = '<br /><br /> State: '+ state;
+	<!-- document.getElementById("al2").innerHTML ='<br>Higher bidder:'+Highest_bider; -->
+	//document.getElementById("al3").innerHTML ='<br> Highest Bid :'+Highest_bid;
+	//document.getElementById("al4").innerHTML ='<br> End Auction Time :'+date;
+			/* */
+			};
+ 
+
+
+function stop_auction(){
+	var transactionObject = {
+					 from: user[0],
+					 //value: "test",
+					 gas: 3000000
+				   };
+
+				   auctionInstance.stop_auction(transactionObject, function(err, result){
+					if(!err)
+						document.getElementById("results").innerHTML = 'Transaction en cours:  ' + result;
+					else
+						document.getElementById("results").innerHTML = ' error: ' + err;
+				});
+				   
+}
+//}
+	 
+		</script>
+ 
+ 
+		<!--br>
+ Your ID <input type="text" id="id_account" placeholder="Id account"-->
+
+
+
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+ 
+<html>
+<head>
+<style>
+* {
+    box-sizing: border-box;
+}
+.header, .footer {
+    background-color: grey;
+    color: white;
+    padding: 5px;
+}
+.column {
+    float: left;
+    padding: 15px;
+}
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+.menu {
+    width: 35%;
+}
+.content {
+    width: 65%;
+}
+.menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.menu li {
+    padding: 8px;
+    margin-bottom: 8px;
+    background-color: #33b5e5;
+    color: #ffffff;
+}
+.menu li:hover {
+    background-color: #0099cc;
+}
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.navbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+</style>
+</head>
+<body  >
+<div class="navbar">
+  <a href="index.html">Project list</a>
+  <a href="operations.html">Operations</a>
+  <a href="invest.html">invest</a>
+  <a href="auction.html">Auction</a>
+</div>
+<br>
+<div class="header">
+  <h1>Daaret project</h1>
+</div>
+
+<div class="clearfix">
+  <div class="column menu">
+    <ul>
+      <li>Initial Cost 9000$ (100 Token)</li>
+      <li id="al1">Non</li>
+      <li id="al2">Non</li>
+      <li id="al3">Non</li>
+      <li id="al4">Non</li>
+    </ul>
+	
+	  <div style="background-color: #f6f6f7;  padding: 20px; border:1px;border-style: solid; border-color: gray;">		
+  <input type="number" id="bidAmount" placeholder="Bid Amount (e.g. 1 ether)" />
+		<button id="bid" onClick="bid();">Bid</button>
+		<br>
+		<br>
+		<button id="lookup" onClick="lookup();">Get Info (Highest Bid, Winner...)</button>
+	
+		<br>
+		<br>
+  
+<button id="start" onClick="start_auction();">Start auction (Admin only)</button>		<input type="auction_duration" id="auction_duration" placeholder="auction duration" />
+
+<br>
+<br>
+<button id="stop" onClick="stop_auction();">STOP auction (Admin only)</button>
+ </div>
+	
+	
+  </div>
+
+  <div class="column content">
+    <h1>Project X (Sell phase : Auction)</h1>
+    <img src="./pics/a.jpg">
+    <p>Chania is the capital of the Chania region on the island of Crete. The city can be divided in two parts, the old town and the modern city.</p>
+    <p>You will learn more about web layout and responsive web pages in a later chapter.</p>
+  </div>
+  
+  </div>
+
+ 
+
+
+<div class="footer">
+  <p><div id="results"></div><div id="address_"></div>
+</p>
+</div>
+
+</body>
+</html>
+
+		
+</body>
+</html>

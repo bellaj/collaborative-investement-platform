@@ -1,0 +1,188 @@
+<html>
+	<head>
+  		<script src="web3js/web3.js"></script>
+
+	</head>
+
+
+<script type="text/javascript">
+ 	 var auctionContract=0x0;
+	 	var ContractInstance=0x0 ;
+	 	var user=0x0 ;
+			window.addEventListener('load', function() {
+
+   if (typeof web3 !== 'undefined') {
+    // Use Mist/MetaMask's provider
+    window.web3 = new Web3(web3.currentProvider);
+	console.log("1");
+  } else {
+    console.log('No web3? You should consider trying MetaMask!')
+    // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+    window.web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/esamuIL4MaKepy64zcLj"));
+		console.log("2");
+
+  }
+
+  // Now you can start your app & access web3 freely:
+  auctionContract =web3.eth.contract([{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"ad","type":"address"},{"name":"s","type":"uint256"}],"name":"deliver_token","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"project_","type":"address"},{"name":"amount","type":"uint256"}],"name":"invest_in_project","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"},{"name":"_extraData","type":"bytes"}],"name":"approveAndCall","outputs":[{"name":"success","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"admin","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"},{"payable":false,"type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_owner","type":"address"},{"indexed":true,"name":"_spender","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Approval","type":"event"}]
+);
+
+	  ContractInstance = auctionContract.at("0x62012e09bc441f0c07bab6a73b2e260e62e5000b");
+initiation();
+	user_();
+ 		
+})		
+
+
+  function user_(){
+ web3.eth.getAccounts(function(error, result){
+    if(!error)
+user=result;
+    else
+user=0x1;
+})
+
+}
+		
+
+ 
+
+	function get_token_() {
+	 	var address_to = document.getElementById("address").value;
+	var address =  user[0];
+		var amount = document.getElementById("get_token").value;//web3.toWei(document.getElementById("get_token").value, 'ether');
+
+	var transactionObject = { from: user[0],		// value: value,
+			 gas: 3000000
+			 };
+		ContractInstance.deliver_token(address_to,amount,transactionObject, function(err, result){
+			if(!err)
+				document.getElementById("results").innerHTML = 'Token processing... <br /><br /> Tokens Amount: <br /> ' + amount + ' Token to'+address+' <br  /><br /> Transaction Hash: <br />' + result;
+			else
+				document.getElementById("results").innerHTML = 'Token error: ' + err;
+		});
+
+	 
+	}
+ 
+	function ckeck_balance(){
+	var address = user[0];
+		var amount = document.getElementById("get_token").value;//web3.toWei(document.getElementById("get_token").value, 'ether');
+
+	var transactionObject = { from: user[0],		// value: value,
+			 gas: 3000000
+			 };
+	ContractInstance.balanceOf(address,transactionObject, function(err, result){
+			if(!err)
+				document.getElementById("results2").innerHTML = 'your balance is :'+result+' Daaret tokens';//console.log(result);//
+			else
+				document.getElementById("results2").innerHTML = ' error: ' + err;
+		});
+
+	}
+	
+	function transfer_token(){
+		var address2 = document.getElementById("address2").value;
+		var amount2 = document.getElementById("dest_token").value;//web3.toWei(document.getElementById("get_token").value, 'ether');
+		var transactionObject = { from: user[0],		// value: value,
+			 gas: 3000000
+			 };
+		ContractInstance.approve(address2,amount2,transactionObject, function(err, result){
+			if(!err)
+				{
+				document.getElementById("results").innerHTML = 'Transfer processing' + result;
+				ContractInstance.transfer(address2,amount2,transactionObject);
+					 
+				}
+				
+			else
+				document.getElementById("results").innerHTML = 'Transfer error: ' + err;
+		});
+		
+		
+		
+	
+	}
+	
+	function initiation(){
+		 web3.eth.getAccounts(function(error, result){
+    if(!error)
+user=result;
+    else
+user=0x1;
+});
+						document.getElementById("my_account").innerHTML = 'Your Codebase address is: '+user[0];
+//document.getElementById("address").value=user[0];		
+}
+		
+		
+		function sell_project_token(){ //function to sell a project tokens against fiat money
+		
+		}
+		function s_token(){ //function to sell Dareet tokens against fiat
+		
+		}
+		
+		
+</script>
+</head>
+<link rel="stylesheet" type="text/css" href="style.css" />
+
+
+
+<body >
+
+<div class="navbar">
+  <a href="index.html">Project list</a>
+  <a href="operations.html">Operations</a>
+  <a href="invest.html">invest</a>
+  <a href="auction.html">Auction</a>
+</div>
+<br>
+
+
+<!--br>
+Your ID <input type="text" id="id_account" placeholder="Id account" value="1">
+
+<br-->
+ <div style="background-color: #f6f6f7;  padding: 20px; border:1px;border-style: solid; border-color: gray;margin-top:100px;"><h2>Dareet token operations</h2><br>
+	Deposit $ and get tokens (this operation needs the Admin intervention)
+<br>
+<input type="get_token" id="get_token" placeholder="Amount in $" >
+<input type="address" id="address" placeholder="Address">  <button id="get_token_button" onClick="get_token_();">Attribute D Token </button><br/>
+<br><br>
+user's operations :<br>
+<input type="text" id="address2" placeholder="Destination's Address ">
+<input type="text" id="dest_token" placeholder="Token's amount">
+<button id="transfer_token_button" onClick="transfer_token();">Transfer D Tokens</button><br/>
+
+<input type="text" id="project_invest" placeholder="Project address">
+<input type="text" id="amount_invest" placeholder="Amount">
+<button id="invest_token_button" onClick="invest_token();">invest</button>
+<br/>
+ 
+ <input type="text" id="dest_sell_token" placeholder="Token's amount">
+<button id="se_token_button" onClick="s_token();">Sell D Tokens</button><br/> 
+<br>
+ <input type="text" id="project_sell_token" placeholder="Token's amount">
+<button id="sell_project_button" onClick="sell_project_token();">Sell Projects Tokens</button>
+
+<br/> 
+<button id="check_button" onClick="ckeck_balance();">Check my balance</button> 
+
+ <div id="results2"></div> 
+
+<div id="results2"></div>
+<div id="results"></div>
+
+</div>
+
+
+
+<br><div id="my_account"></div>
+
+
+
+
+</body>
+</html>
